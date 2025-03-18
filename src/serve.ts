@@ -1,13 +1,7 @@
 import { serve } from "@hono/node-server"
-import { Hono } from "hono"
 
-import { env } from "./app/env"
-
-const app = new Hono()
-
-app.get("/", c => {
-  return c.text("Hello Hono!")
-})
+import { env } from "@/app/env"
+import { app } from "@/app/main"
 
 serve(
   {

@@ -28,5 +28,6 @@ lerna-debug.log*
 .DS_Store
 
 # CUSTOM
+dist/
 .local/
 docker-data/

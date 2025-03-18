@@ -18,5 +18,6 @@
     "verbatimModuleSyntax": true,
     "target": "ESNext",
     "types": ["node"]
-  }
+  },
+  "exclude": ["node_modules"]
 }
