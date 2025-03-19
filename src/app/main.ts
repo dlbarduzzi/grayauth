@@ -1,4 +1,4 @@
-import { users } from "@/routes/users/main"
+import { route as users } from "@/routes/users/handlers"
 import { createApp } from "./core"
 
 const app = createApp()

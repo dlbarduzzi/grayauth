@@ -8,6 +8,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["test", "development", "production"]),
   APP_URL: z.string().url(),
   APP_PORT: z.coerce.number(),
+  DATABASE_URL: z.string().url(),
 })
 
 // eslint-disable-next-line no-process-env

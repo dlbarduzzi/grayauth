@@ -1,9 +1,13 @@
 import { z } from "zod"
+import bcrypt from "bcryptjs"
+
 import { createRoute } from "@/app/core"
 import { hasAppJsonHeader, errAppJsonHeader } from "@/app/utils"
 import { StatusUnauthorized, StatusUnprocessableEntity } from "@/tools/http/status"
 
-const users = createRoute()
+import { findUserByEmail, findPasswordByUserId } from "./queries"
+
+const route = createRoute()
 
 const signInSchema = z.object({
   email: z
@@ -17,7 +21,7 @@ const signInSchema = z.object({
     .min(1, { message: "Password is required" }),
 })
 
-users.post("/", async ctx => {
+route.post("/", async ctx => {
   if (!hasAppJsonHeader(ctx.req.raw.headers)) {
     return errAppJsonHeader(ctx)
   }
@@ -36,14 +40,7 @@ users.post("/", async ctx => {
     )
   }
 
-  function findUserByEmail(email: string) {
-    if (email === "john@email.com") {
-      return { id: "abcd-1234", email: "john@email.com" }
-    }
-    return null
-  }
-
-  const user = findUserByEmail(parsed.data.email)
+  const user = await findUserByEmail(parsed.data.email)
   if (user == null) {
     return ctx.json(
       { ok: false, error: StatusUnauthorized.text, details: "Invalid credentials" },
@@ -51,28 +48,18 @@ users.post("/", async ctx => {
     )
   }
 
-  function findPasswordByUserId(userId: string) {
-    if (userId === "abcd-1234") {
-      return "P@ssword!"
-    }
-    return null
-  }
-
-  const hashedPassword = findPasswordByUserId(user.id)
-  if (hashedPassword == null) {
+  const password = await findPasswordByUserId(user.id)
+  if (password == null) {
     return ctx.json(
       { ok: false, error: StatusUnauthorized.text, details: "Invalid credentials" },
       StatusUnauthorized.code
     )
   }
 
-  function compare(password: string, hashedPassword: string) {
-    return password === hashedPassword
-  }
-
-  if (!compare(parsed.data.password, hashedPassword)) {
+  const match = await bcrypt.compare(parsed.data.password, password.passwordHash)
+  if (!match) {
     return ctx.json(
-      { ok: false, error: StatusUnauthorized.text, details: "Invalid credentials" },
+      { ok: false, error: StatusUnauthorized.text, details: "Invalid credentials 3" },
       StatusUnauthorized.code
     )
   }
@@ -82,4 +69,4 @@ users.post("/", async ctx => {
   return ctx.json({ ok: true, user }, 200)
 })
 
-export { users }
+export { route }
