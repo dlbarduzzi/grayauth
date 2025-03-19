@@ -1,25 +1,18 @@
-import { z } from "zod"
 import bcrypt from "bcryptjs"
 
 import { createRoute } from "@/app/core"
 import { hasAppJsonHeader, errAppJsonHeader } from "@/app/utils"
-import { StatusUnauthorized, StatusUnprocessableEntity } from "@/tools/http/status"
 
+import {
+  StatusOK,
+  StatusUnauthorized,
+  StatusUnprocessableEntity,
+} from "@/tools/http/status"
+
+import { signInSchema } from "./schemas"
 import { findUserByEmail, findPasswordByUserId } from "./queries"
 
 const route = createRoute()
-
-const signInSchema = z.object({
-  email: z
-    .string({ message: "Email is required" })
-    .trim()
-    .min(1, { message: "Email is required" })
-    .email("Not a valid email"),
-  password: z
-    .string({ message: "Password is required" })
-    .trim()
-    .min(1, { message: "Password is required" }),
-})
 
 route.post("/", async ctx => {
   if (!hasAppJsonHeader(ctx.req.raw.headers)) {
@@ -66,7 +59,7 @@ route.post("/", async ctx => {
 
   // TODO: Set cookie header!
 
-  return ctx.json({ ok: true, user }, 200)
+  return ctx.json({ ok: true, user }, StatusOK.code)
 })
 
 export { route }
