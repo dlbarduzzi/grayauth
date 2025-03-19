@@ -6,6 +6,8 @@
     "dev": "tsx watch src/serve.ts",
     "build": "tsc",
     "lint": "eslint",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
     "db:studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate",
     "db:generate": "drizzle-kit generate"
@@ -23,6 +25,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
+    "@vitest/coverage-istanbul": "^3.0.9",
     "drizzle-kit": "^0.30.5",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.1",
@@ -30,6 +33,7 @@
     "prettier": "^3.5.3",
     "tsx": "^4.7.1",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1"
+    "typescript-eslint": "^8.26.1",
+    "vitest": "^3.0.9"
   }
 }
