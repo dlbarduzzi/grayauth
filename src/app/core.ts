@@ -6,12 +6,12 @@ import { requestId } from "hono/request-id"
 import { logger } from "./logger"
 import { StatusNotFound, StatusInternalServerError } from "@/tools/http/status"
 
-export function createRoute() {
+export function createRouter() {
   return new Hono<AppEnv>({ strict: false })
 }
 
 export function createApp() {
-  const app = createRoute()
+  const app = createRouter()
 
   app.use(requestId())
 

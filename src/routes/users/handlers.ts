@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs"
+import { setCookie } from "hono/cookie"
 
-import { createRoute } from "@/app/core"
+import { createRouter } from "@/app/core"
 import { getJsonPayload } from "@/app/request"
 
 import {
@@ -13,9 +14,9 @@ import {
 import { signInSchema } from "./schemas"
 import { findUserByEmail, findPasswordByUserId } from "./queries"
 
-const route = createRoute()
+const router = createRouter()
 
-route.post("/", async ctx => {
+router.post("/sign-in", async ctx => {
   const { body, error } = await getJsonPayload(ctx)
   if (error != null) {
     return ctx.json(
@@ -61,9 +62,15 @@ route.post("/", async ctx => {
     )
   }
 
-  // TODO: Set cookie header!
+  setCookie(ctx, "test_session_token", "test_1234", {
+    httpOnly: true,
+    secure: false,
+    maxAge: 60 * 10,
+    sameSite: "lax",
+    path: "/",
+  })
 
   return ctx.json({ ok: true, user }, StatusOK.code)
 })
 
-export { route }
+export { router }
