@@ -1,17 +1,24 @@
+import type { AppEnv } from "./types"
+
 import { Hono } from "hono"
-import { logger } from "hono/logger"
 import { requestId } from "hono/request-id"
+
+import { logger } from "./logger"
 import { StatusNotFound, StatusInternalServerError } from "@/tools/http/status"
 
 export function createRoute() {
-  return new Hono({ strict: false })
+  return new Hono<AppEnv>({ strict: false })
 }
 
 export function createApp() {
   const app = createRoute()
 
   app.use(requestId())
-  app.use(logger())
+
+  app.use("*", async (ctx, next) => {
+    ctx.set("logger", logger)
+    await next()
+  })
 
   app.notFound(ctx => {
     return ctx.json(

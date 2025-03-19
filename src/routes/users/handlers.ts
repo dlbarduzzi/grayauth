@@ -16,7 +16,7 @@ import { findUserByEmail, findPasswordByUserId } from "./queries"
 const route = createRoute()
 
 route.post("/", async ctx => {
-  const { body, error } = await getJsonPayload(ctx.req.raw)
+  const { body, error } = await getJsonPayload(ctx)
   if (error != null) {
     return ctx.json(
       { ok: false, error: StatusBadRequest.text, details: error },

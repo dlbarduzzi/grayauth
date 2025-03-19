@@ -2,6 +2,7 @@ import { serve } from "@hono/node-server"
 
 import { env } from "@/lib/env"
 import { app } from "@/app/app"
+import { logger } from "@/app/logger"
 
 serve(
   {
@@ -9,6 +10,6 @@ serve(
     port: env.APP_PORT,
   },
   info => {
-    console.log(`Server is running on http://localhost:${info.port}`)
+    logger.info("server started", { port: info.port })
   }
 )
