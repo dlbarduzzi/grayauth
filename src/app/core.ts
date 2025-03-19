@@ -1,12 +1,7 @@
 import { Hono } from "hono"
 import { logger } from "hono/logger"
 import { requestId } from "hono/request-id"
-
-import {
-  StatusNotFound,
-  StatusUnprocessableEntity,
-  StatusInternalServerError,
-} from "@/tools/http/status"
+import { StatusNotFound, StatusInternalServerError } from "@/tools/http/status"
 
 export function createRoute() {
   return new Hono({ strict: false })
@@ -30,19 +25,7 @@ export function createApp() {
   })
 
   app.onError((err, ctx) => {
-    if (err instanceof SyntaxError && err.message.toLowerCase().includes("json")) {
-      return ctx.json(
-        {
-          ok: false,
-          error: StatusUnprocessableEntity.text,
-          message: "Malformed JSON in request body",
-        },
-        StatusUnprocessableEntity.code
-      )
-    }
-
     console.error(err)
-
     return ctx.json(
       {
         ok: false,

@@ -1,10 +1,11 @@
 import bcrypt from "bcryptjs"
 
 import { createRoute } from "@/app/core"
-import { hasAppJsonHeader, errAppJsonHeader } from "@/app/utils"
+import { getJsonPayload } from "@/app/request"
 
 import {
   StatusOK,
+  StatusBadRequest,
   StatusUnauthorized,
   StatusUnprocessableEntity,
 } from "@/tools/http/status"
@@ -15,11 +16,14 @@ import { findUserByEmail, findPasswordByUserId } from "./queries"
 const route = createRoute()
 
 route.post("/", async ctx => {
-  if (!hasAppJsonHeader(ctx.req.raw.headers)) {
-    return errAppJsonHeader(ctx)
+  const { body, error } = await getJsonPayload(ctx.req.raw)
+  if (error != null) {
+    return ctx.json(
+      { ok: false, error: StatusBadRequest.text, details: error },
+      StatusBadRequest.code
+    )
   }
 
-  const body = await ctx.req.json()
   const parsed = signInSchema.safeParse(body)
 
   if (!parsed.success) {
@@ -52,7 +56,7 @@ route.post("/", async ctx => {
   const match = await bcrypt.compare(parsed.data.password, password.passwordHash)
   if (!match) {
     return ctx.json(
-      { ok: false, error: StatusUnauthorized.text, details: "Invalid credentials 3" },
+      { ok: false, error: StatusUnauthorized.text, details: "Invalid credentials" },
       StatusUnauthorized.code
     )
   }

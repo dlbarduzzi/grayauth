@@ -1,7 +1,7 @@
 import { serve } from "@hono/node-server"
 
 import { env } from "@/lib/env"
-import { app } from "@/app/main"
+import { app } from "@/app/app"
 
 serve(
   {

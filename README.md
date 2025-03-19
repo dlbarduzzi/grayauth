@@ -8,3 +8,5 @@
 - Compression
 - Request duration
 - Metrics
+- API docs
+- Testing
