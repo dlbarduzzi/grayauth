@@ -16,6 +16,11 @@ jobs:
       DB_NAME: "test_db"
       DB_USER: "username"
       DB_PASS: "password"
+      NODE_ENV: "development"
+      APP_URL: "http://localhost:3000"
+      APP_PORT: "3000"
+      LOG_LEVEL: "debug"
+      DATABASE_URL: "postgresql://username:password@localhost:5432/test_db"
 
     steps:
       - name: Checkout
@@ -48,8 +53,6 @@ jobs:
 
       - name: Setup database          
         run: npm run db:migrate
-        env:
-          DATABASE_URL: "postgresql://username:password@localhost:5432/test_db"
 
       - name: Test
         run: npm run test
