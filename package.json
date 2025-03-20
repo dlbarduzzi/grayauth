@@ -7,6 +7,7 @@
     "build": "tsc",
     "lint": "eslint",
     "test": "vitest",
+    "test:single": "vitest --no-file-parallelism",
     "test:coverage": "vitest run --coverage",
     "db:studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate",

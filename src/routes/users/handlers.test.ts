@@ -22,7 +22,11 @@ function createTestApp(router: Hono<AppEnv>) {
 const testRouter = createTestApp(router)
 
 describe("users.handlers", () => {
-  const testEmail = "jane@email.com"
+  // Use random string to create email to avoid database conflict
+  // with other tests/files running in parallel where they also
+  // create and delete database user records.
+  const random = crypto.randomUUID().replaceAll("-", "")
+  const testEmail = `${random}@test.com`
   const testPassword = "password"
 
   beforeAll(async () => {
